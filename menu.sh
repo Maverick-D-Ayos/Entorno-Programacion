@@ -9,11 +9,11 @@ C) Limpiar pantalla
 Eliga una opción: "
 read opcion
 case $opcion in
-        1) ./Scripts/statsWords.sh /texto/$TEXTO ; submenu /texto/$TEXTO ;;
-        2) ./statsUsageWords.sh $TEXTO ; submenu $TEXTO;;
-        3) ./findNames.sh $TEXTO ; submenu $TEXTO;;
-        4) ./statsSentences.sh $TEXTO ; submenu $TEXTO;;
-        5) ./blankLinesCounter.sh $TEXTO ; submenu $TEXTO;;
+        1) ./Scripts/statsWords.sh $TEXTO ; submenu $TEXTO ;;
+        2) ./Scripts/statsUsageWords.sh $TEXTO ; submenu $TEXTO;;
+        3) ./Scripts/findNames.sh $TEXTO ; submenu $TEXTO;;
+        4) ./Scripts/statsSentences.sh $TEXTO ; submenu $TEXTO;;
+        5) ./Scripts/blankLinesCounter.sh $TEXTO ; submenu $TEXTO;;
         0) clear ; menu ;;
         C) clear ; submenu $TEXTO;;
         *) echo -e "Opcion incorrecta $opcion" ; submenu $TEXTO;;
@@ -24,11 +24,11 @@ menu(){
 echo "Seleccione un TEXTO de texto por favor."
 ls /texto/
 read
-if [ -r $REPLY ]
+if [ -r /texto/$REPLY ] && [ -f /texto/$REPLY ]
 then
-    submenu $REPLY
+    submenu /texto/$REPLY
 else
-    echo "No es un TEXTO o no tiene permisos de lectura."
+    echo "No es un archivo de texto simple, no tiene permisos de lectura o no existe."
 fi
 }
 
