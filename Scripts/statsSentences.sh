@@ -1,27 +1,33 @@
 #! /usr/bin/env bash
 ARCHIVO=$1
 TEMPORAL=/tmp/temporal
-sed -e 's/, [¿¡]/ /g' -e 's/[?\!],//g' <$ARCHIVO> $TEMPORAL
-sed -i 's/\. [A-Z0-9]/\n\U&/g' $TEMPORAL
-sed -i 's/[?\!],//g' $TEMPORAL
-sed -i 's/[ \.][¿¡][^a-z]/\n\U&/g' $TEMPORAL
-sed -i 's/[",:;]//g' $TEMPORAL
-sed -i 's/[?¡][ \.][^a-z]/\n\U&/g' $TEMPORAL
-sed -i 's/\. [A-Z0-9]/\n\U&/g' $TEMPORAL
+# Primero cambia ", ¿¡" por " ", se elimina "?!,",Si hay unaun . y mayuscula se hace un carro, se elimina ?!, 
+# luego si hay oraciones que empiezan con ¿¡ se crea nueva linea
+sed -e 's/, [¿¡]/ /g' -e 's/[?\!],//g' -e 's/\. [A-Z0-9]/\n\U&/g' -e 's/[ \.][¿¡][^a-z]/\n\U&/g' <$ARCHIVO> $TEMPORAL
+# se eliminan puntuaciones y otros caracteres, si hay oraciones detras de ?! se hace nueva linea
+# y lo mismo con las oraciones comunes
+sed -i -e 's/[",:;#\$\&\*]//g' -e 's/[?¡][ \.][^a-z]/\n\U&/g' -e 's/\. [A-Z0-9]/\n\U&/g' $TEMPORAL
+# Se elimina ?!. del inicio de cada linea, " " y ¿¡, restos de ¿?¿!.
 sed -i -e 's/^[?\!\.]//g' -e 's/^ [¿¡]//g' -e 's/[¿?¡\!\.]//g' $TEMPORAL
-sed -i 's/^[[:space:]]//g' $TEMPORAL
-sed -i '/^$/d' $TEMPORAL
-sed -i 's/$/\./g' $TEMPORAL
-CANTIDADPALABRAS=$(grep -E -o "[A-Z0-9][^.]*" $TEMPORAL | wc -w) #cuenta las palabras en la oracion
-CANTIDADORACIONES=$(grep -E -o "[A-Z0-9][^.]*" $TEMPORAL | wc -l) #cuenta la cantidad de oraciones
+#Se guarda en variable la cantidad de palabrasa por oracion usando grep y wc.
+CANTIDADPALABRAS=$(grep -E -o "[A-Z0-9][^.]*" $TEMPORAL | wc -w)
+# Se guarda en variable la cantidad de oraciones. Se utiliza grep para filtrar las oraciones y se cuenta con wc
+CANTIDADORACIONES=$(grep -E -o "[A-Z0-9][^.]*" $TEMPORAL | wc -l)
+#Se calcula el promedio usando bc con libreria matematica -l, seteando con scale=2 para que tome y redondee con dos decimales.
 PROMEDIO=$(echo "scale=2; $CANTIDADPALABRAS / $CANTIDADORACIONES" | bc -l) #Promedio de las oraciones
-grep -o "[A-Z0-9][^.]*" $TEMPORAL >> /tmp/TEXTO
-while IFS= read -r line; do echo $line | wc -w; done < /tmp/TEXTO >> /tmp/alos
+# Se filtra con grep solo las oracioes y se guardan en un archivo temporal
+grep -o "[A-Z0-9][^.]*" $TEMPORAL >> /tmp/filtrado
+#se lee liena a linea hasta el final del archivo se cuenta la cantidad de loneas
+while IFS= read -r line; do echo $line | wc -w; done < /tmp/filtrado >> /tmp/alos
+#Se ordena por orden numerico y se guarda por archivo.
 sort -n /tmp/alos > /tmp/ordenado
+# Se guarda por variables el promer y ultimo elemento del archivo.
 MINIMO=$(head -1 /tmp/ordenado)
 MAXIMO=$(tail -1 /tmp/ordenado)
-echo "la oración con mayor longitud tiene $MAXIMO."
-echo "la oración con menor longitud tiene $MINIMO."
-echo "El promedio es $PROMEDIO."
-rm /tmp/TEXTO /tmp/alos /tmp/ordenado /tmp/temporal
+# Se muestra el resultado por salida estandar.
+echo "La oración con mayor longitud tiene $MAXIMO. 
+La oración con menor longitud tiene $MINIMO.
+El promedio es $PROMEDIO."
+# Se eliminan los archivos temporales y variables.
+rm /tmp/filtrado /tmp/alos /tmp/ordenado /tmp/temporal
 unset CANTIDADPALABRAS CANTIDADORACIONES PROMEDIO MINIMO MAXIMO TEMPORAL
