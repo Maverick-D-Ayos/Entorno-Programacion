@@ -17,7 +17,6 @@ Contador de líneas en blanco.
 ### Modo de uso:
 1. **Primer paso:** Tener instalado docker sino lo tiene instalado seguir el tutorial del siguiente enlace:
 [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04 "how to install and use docker on ubuntu 22.04") luego de terminar con los pasos se recomienda reiniciar el equipo.
-2. **Segundo paso:** Clonar el repositorio en una carpeta por ejemplo en Descargas.
- `git clone https://github.com/Maverick-D-Ayos/Entorno-Programacion.git`
-3. **Tercer paso:** Ingresar a la carpeta y abrir una terminal, ejecutar `docker build . -t tuia:tp-final`
+2. **Segundo paso:** Clonar el repositorio en una carpeta por ejemplo en Descargas, abrimos una terminal y ejecutamos `git clone https://github.com/Maverick-D-Ayos/Entorno-Programacion.git`
+3. **Tercer paso:** Ingresar a la carpeta con `cd Entorno-Programacion`, luego ejecutar `docker build . -t tuia:tp-final`
 4. **Cuarto paso:** Ejecutar `docker container run -it -v $(pwd)/texto:/texto:ro --rm tuia:tp-final`
