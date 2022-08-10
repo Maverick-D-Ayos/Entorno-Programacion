@@ -20,4 +20,4 @@ Contador de líneas en blanco.
 2. **Segundo paso:** Clonar el repositorio en una carpeta por ejemplo en Descargas.
  `git clone https://github.com/Maverick-D-Ayos/Entorno-Programacion.git`
 3. **Tercer paso:** Ingresar a la carpeta y abrir una terminal, ejecutar `docker build . -t tuia:tp-final`
-4. **Cuarto paso:** Ejecutar `docker container run -it -v $(pwd)/texto:/texto:ro --rm tuia:final`
+4. **Cuarto paso:** Ejecutar `docker container run -it -v $(pwd)/texto:/texto:ro --rm tuia:tp-final`
